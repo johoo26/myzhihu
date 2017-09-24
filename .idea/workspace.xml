@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="291485b0-4c3d-4c64-92cf-43a72d2cfc8d" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/manage.py" afterPath="$PROJECT_DIR$/manage.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/models.py" afterPath="$PROJECT_DIR$/app/models.py" />
     </list>
     <ignored path="$PROJECT_DIR$/.idea/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -36,11 +36,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="models.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="models.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/models.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="684">
-              <caret line="47" column="0" lean-forward="false" selection-start-line="47" selection-start-column="0" selection-end-line="47" selection-end-column="0" />
+            <state relative-caret-position="247">
+              <caret line="138" column="0" lean-forward="true" selection-start-line="138" selection-start-column="0" selection-end-line="138" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -86,6 +86,18 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="models.py" pinned="false" current-in-tab="false">
+        <entry file="file://$USER_HOME$/pycharm/jopy/flasky/app/models.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-2223">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding>
+                <element signature="e#0#29#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="manage.py" pinned="false" current-in-tab="false">
         <entry file="file://$USER_HOME$/pycharm/jopy/flasky/manage.py">
           <provider selected="true" editor-type-id="text-editor">
@@ -96,11 +108,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="manage.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="manage.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/manage.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="324">
-              <caret line="44" column="61" lean-forward="false" selection-start-line="44" selection-start-column="61" selection-end-line="44" selection-end-column="61" />
+            <state relative-caret-position="267">
+              <caret line="41" column="60" lean-forward="true" selection-start-line="41" selection-start-column="60" selection-end-line="41" selection-end-column="60" />
               <folding>
                 <element signature="e#45#54#0" expanded="true" />
               </folding>
@@ -167,7 +179,6 @@
         <option value="$PROJECT_DIR$/app/api_1_0/topics.py" />
         <option value="$PROJECT_DIR$/tests/__init__.py" />
         <option value="$PROJECT_DIR$/app/__init__.py" />
-        <option value="$PROJECT_DIR$/app/models.py" />
         <option value="$PROJECT_DIR$/tests/test_basics.py" />
         <option value="$PROJECT_DIR$/tests/test_user_model.py" />
         <option value="$PROJECT_DIR$/tests/test_client.py" />
@@ -175,6 +186,7 @@
         <option value="$PROJECT_DIR$/config.py" />
         <option value="$PROJECT_DIR$/app/auth/views.py" />
         <option value="$PROJECT_DIR$/manage.py" />
+        <option value="$PROJECT_DIR$/app/models.py" />
       </list>
     </option>
   </component>
@@ -336,13 +348,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/app/templates/main/question.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="228">
-          <caret line="12" column="20" lean-forward="true" selection-start-line="12" selection-start-column="20" selection-end-line="12" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/templates/topic_dynamics.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="143">
@@ -625,14 +630,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/pycharm/jopy/flasky/config.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-465">
-          <caret line="43" column="59" lean-forward="true" selection-start-line="43" selection-start-column="59" selection-end-line="43" selection-end-column="59" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/pycharm/jopy/flasky/manage.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1083">
@@ -653,14 +650,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="181">
           <caret line="69" column="0" lean-forward="true" selection-start-line="69" selection-start-column="0" selection-end-line="69" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="684">
-          <caret line="47" column="0" lean-forward="false" selection-start-line="47" selection-start-column="0" selection-end-line="47" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -701,11 +690,37 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/manage.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="324">
-          <caret line="44" column="61" lean-forward="false" selection-start-line="44" selection-start-column="61" selection-end-line="44" selection-end-column="61" />
+        <state relative-caret-position="267">
+          <caret line="41" column="60" lean-forward="true" selection-start-line="41" selection-start-column="60" selection-end-line="41" selection-end-column="60" />
           <folding>
             <element signature="e#45#54#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/pycharm/jopy/flasky/config.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-465">
+          <caret line="43" column="59" lean-forward="true" selection-start-line="43" selection-start-column="59" selection-end-line="43" selection-end-column="59" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/pycharm/jopy/flasky/app/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2223">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#29#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="247">
+          <caret line="138" column="0" lean-forward="true" selection-start-line="138" selection-start-column="0" selection-end-line="138" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>

@@ -135,7 +135,7 @@ class User(UserMixin, db.Model):
 
     @property
     def password(self):
-        raise AttributeError, 'password is not readable'
+        raise AttributeError( 'password is not readable')
 
     @password.setter
     def password(self, password):
