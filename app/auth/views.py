@@ -5,7 +5,7 @@ from . import auth
 from .. import db
 from flask import render_template, redirect, flash, url_for, request, g
 from flask_login import logout_user, login_user, login_required, current_user
-from forms import RegisterForm, LoginForm, ChangePasswordForm, \
+from .forms import RegisterForm, LoginForm, ChangePasswordForm, \
     ResetPasswordRequestForm, ResetPasswordForm, ChangeEmailForm, SearchForm
 from ..models import User, Topic
 from ..emails import send_mail
