@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}关注该问题的人 - {{question.title}} - 知乎 {% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <div>
+        <a type="button" class="btn btn-default btn-sm topic-button"
+           href="{{url_for('main.topic_dynamics', id=question.topics[0].id)}}">
+            {{question.topics[0].name}}
+        </a>
+    </div>
+    <div>
+        <a href="{{url_for('main.question', id=question.id)}}">
+            <p class="topic-name">{{question.title}}</p>
+        </a>
+    </div>
+</div>
+<div>
+    {% for follower in question.followers %}
+    <a href="{{url_for('main.profile', username=follower.username)}}">
+        <img class="img-round profile-thumbnail" src="{{follower.gravatar(size=36)}}" />
+    </a>
+    <div class="answerers">
+    <a style="font-weight:bold;" href="{{url_for('main.profile', username=follower.username)}}">{{follower.username}}</a>
+    <div class="right">
+        {% if current_user != follower %}
+        {% if current_user.is_following(follower) %}
+        <a type="button" class="btn btn-default btn-xs"
+           href="{{url_for('main.unfollow', username=follower.username)}}">取消关注</a>
+        {% else %}
+        <a type="button" class="btn btn-success btn-xs"
+           href="{{url_for('main.follow', username=follower.username)}}">+ 关注</a>
+        {% endif %}
+        {% endif %}
+    </div>
+        <p style="font-size:smaller;">{{follower.description}}</p>
+    </div><hr/>
+    {% endfor %}
+</div>
+{% endblock %}

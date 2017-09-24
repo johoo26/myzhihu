@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block page_side %}
+<div>
+    {% if current_user.is_following_topic(topic) %}
+    <a type="button" class="btn btn-default" href="{{url_for('main.unfollow_topic', id=topic.id)}}">取消关注</a>
+    {% else %}
+    <a type="button" class="btn btn-success" href="{{url_for('main.follow_topic', id=topic.id)}}">+ 关注</a>
+    {% endif %}
+    <span class="profile-value"><a href="{{url_for('main.topic_followers', id=topic.id)}}">
+        {{topic.followers.count()}}</a>人关注了该话题</span>
+    <br/><br/>
+    <b>描述</b><br/>
+    {{topic.description}}
+</div>
+{% endblock %}

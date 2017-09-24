@@ -1,0 +1,42 @@
+{% extends "main/_profile.html" %}
+
+{% block more_info %}
+<div>
+    <ul class="nav nav-tabs">
+        <li><a href="{{url_for('main.profile', username=user.username)}}">动态</a> </li>
+        <li><a href="{{url_for('main.people_answers',username=user.username)}}">回答{{user.answers.count()}}</a> </li>
+        <li><a href="{{url_for('main.people_asks', username=user.username)}}">提问{{user.questions_asked.count()}}</a> </li>
+        <li><a href="{{url_for('main.followers',username=user.username)}}">关注他的人</a> </li>
+        <li class="active"><a href="{{url_for('main.followings',username=user.username)}}">他关注的人</a> </li>
+        <li><a href="{{url_for('main.people_following_topics',username=user.username)}}">关注的话题</a> </li>
+        <li><a href="{{url_for('main.people_following_questions',username=user.username)}}">关注的问题</a> </li>
+    </ul>
+</div>
+<div class="profile-top">
+    <p><b>他关注的人</b></p>
+    {% for following in user.followings %}
+    <a href="{{url_for('main.profile', username=following.followed.username)}}">
+        <img class="img-rounded profile-thumbnail" src="{{following.followed.gravatar(size=36)}}" />
+    </a>
+    <div class="answerers">
+        <a href="{{url_for('main.profile', username=following.followed.username)}}">
+            {{following.followed.username}}
+        </a>
+        {% if current_user != following.followed %}
+            {% if not current_user.is_following(following.followed) %}
+            <a type="button" class="btn btn-primary right"
+               href="{{url_for('main.follow', username=following.followed.username)}}">
+                + 关注他
+            </a>
+            {% else %}
+            <a type="button" class="btn btn-default right"
+               href="{{url_for('main.unfollow', username=following.followed.username)}}">
+                取消关注
+            </a>
+            {% endif %}
+        {% endif %}
+        <p><small>{{following.followed.description}}</small></p>
+    </div><hr/>
+    {% endfor %}
+</div>
+{% endblock %}

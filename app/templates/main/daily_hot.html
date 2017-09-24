@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% import "_macros.html" as macro %}
+
+{% block title %}发现 - 知乎{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <ul class="nav nav-tabs">
+        <li class="active" ><a href="#">今日最热</a></li>
+        <li><a href="{{url_for('main.monthly_hot')}}">本月最热</a></li>
+    </ul>
+</div>
+<div>
+    {% for answer in answers_daily_hot %}
+    <div>
+        <p><a class="liked" href="{{url_for('main.question', id=answer.question.id)}}">{{answer.question.title}}</a> </p>
+
+        {% include "main/_answer.html"%}
+    </div>
+    {% endfor %}
+    {% if pagination %}
+    <div class="pagination">
+        {{macro.pagination_widget(pagination, 'main.daily_hot')}}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

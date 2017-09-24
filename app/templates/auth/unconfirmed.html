@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block title %}知乎 - 确认账户{% endblock %}
+
+{% block page_content %}
+<p>亲爱的 {{current_user.username}}</p>
+<p>您的账户还未确认.只有确认账户后才能访问本站内容。</p>
+<p>我们已经发送了一封确认信给您的邮箱,您应该已经收到了.</p>
+<p>如果需要重新发送确认信,请 <a href="{{url_for('auth.resend_confirmation')}}">点击这里</a> </p>
+{% endblock %}

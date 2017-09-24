@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}知乎-登录{% endblock %}
+
+{% block page_content %}
+<div class="col-md-4">
+{{wtf.quick_form(form)}}
+    <a href="{{url_for('auth.register')}}">注册</a>
+    <a href="{{url_for('auth.reset_password_request')}}">忘记密码</a>
+</div>
+{% endblock %}

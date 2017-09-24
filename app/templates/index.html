@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% import "_macros.html" as macro %}
+{% block title%}知乎-首页{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <ul class="nav nav-tabs">
+        <li{% if choice == 0 %} class="active" {% endif %}><a
+            href="{{url_for('main.show_answers_interested_topics')}}">关注的话题动态</a></li>
+        <li{% if choice == 1 %} class="active" {% endif %}><a
+            href="{{url_for('main.show_answers_followings')}}">关注人的回答</a></li>
+        <li{% if choice == 2 %} class="active" {% endif %}><a
+            href="{{url_for('main.show_likes_followings')}}">关注人的赞</a></li>
+    </ul>
+</div>
+<div>
+    {% for answer in answers %}
+        {% if choice == 0 %}
+        <p class="grey">来自话题：
+            {% for topic in answer.question.topics %}
+                {% if topic in current_user.topics %}
+                <a href="{{url_for('main.topic_dynamics', id=topic.id)}}">
+                {{topic.name}}
+                </a>
+                {% endif %}
+            {% endfor %}
+        </p>
+        {% else %}
+        <p class="grey">{{answer.author.username}}回答了问题 * {{moment(answer.timestamp).fromNow(refresh=True)}}</p>
+        {% endif %}
+        <p class="liked"><a href="{{url_for('main.question', id=answer.question.id)}}">{{answer.question.title}}</a></p>
+        {% include "main/_answer.html" %}
+    {% endfor %}
+
+    {% for like in likes %}
+    <p class="grey"><a href="{{url_for('main.profile', username=like.user.username)}}"> {{like.user.username}}</a>赞同了回答 * {{moment(like.timestamp).fromNow(refresh=True)}}</p>
+    <p class="liked"><a href="{{url_for('main.question', id=like.answer.question.id)}}">{{like.answer.question.title}}</a> </p>
+        {% for answer in [like.answer] %}
+            {% include "main/_answer.html" %}
+        {% endfor %}
+    {% endfor %}
+
+    {% if pagination %}
+    <div class="pagination">
+        {% if choice == 0 %}
+            {{macro.pagination_widget(pagination, 'main.show_answers_interested_topics')}}
+        {% elif choice == 1 %}
+            {{macro.pagination_widget(pagination, 'main.show_answers_followings')}}
+        {% else %}
+            {{macro.pagination_widget(pagination, 'main.show_likes_followings')}}
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

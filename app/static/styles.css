@@ -1,0 +1,84 @@
+.content {
+padding-top:50px;
+padding-left:10%;
+}
+.zhihu {
+color: #25d;
+font-size:150%;
+}
+.profile-thumbnail {
+position: absolute;
+}
+.profile-header {
+margin-left: 200px;
+margin-top:-50px;
+min-height:260px;
+}
+.profile-value {
+margin-left:30px;
+}
+.username {
+font-size:200%;
+}
+.description {
+font-size:120%;
+}
+.topic-button {
+color:#00f;
+margin-right:7px;
+margin-bottom:10px;
+}
+.topic-name {
+font-weight:bold;
+font-size:160%;
+}
+.que-button{
+margin-left:10px;
+color:#00f;
+}
+.right {
+float:right;
+}
+.time {
+color:#909090;
+}
+.answerers {
+padding-left:45px;
+padding-bottom:20px;
+}
+.comment {
+padding-top:15px;
+font-size:smaller;
+}
+.link-user {
+font-size:85%;
+font-weight:bold;
+color:#000;
+}
+.delete {
+color:#f00;
+font-weight:bold;
+}
+.grey {
+color:#707070;
+font-size:80%;
+padding-top:10px;
+}
+.bold-and-toppad{
+font-weight: bold;
+padding-top:20px;
+}
+.unliked {
+color:#c0c0c0;
+font-weight:bold;
+}
+.liked {
+font-weight:bold;
+}
+.black-bold-link {
+color:#000;
+font-weight:bold;
+}
+.profile-top {
+margin-top:50px;
+}

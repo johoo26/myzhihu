@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block title %}知乎{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h5>你似乎来到了没有知识的荒原</h5>
+    <a href="{{url_for('main.index')}}">返回首页</a>
+</div>
+{% endblock %}

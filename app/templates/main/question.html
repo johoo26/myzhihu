@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}{{question.title}} - 知乎 {% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <div>{% for topic in question.topics %}
+        <a type="button" class="btn btn-default btn-sm topic-button"
+           href="{{url_for('main.topic_dynamics', id=topic.id)}}">
+            {{topic.name}}
+        </a>
+        {% endfor %}
+    </div>
+    <div>
+        <p class="topic-name">{{question.title}}</p>
+        <p>{{question.body}}
+        {% if current_user == question.author %}
+        <a type="button" class="btn btn-danger btn-xs right"
+           href="{{url_for('main.delete_question', id=question.id)}}">删除问题</a>
+        {% endif %}
+        </p>
+    </div>
+</div>
+<div>
+    <p class="bold-and-toppad">{{question.answers.count()}}个回答</p><hr/>
+    {% for answer in question.answers %}
+
+    {% include "main/_answer.html" %}
+    {% endfor %}
+</div>
+<div>
+    <a name="answer"></a>
+    {{wtf.quick_form(form)}}
+</div>
+{% endblock %}
+{% block page_side %}
+<div class="content right">
+    <p style="font-size:larger;"><a target="_blank" href="{{url_for('main.question_followers', id=question.id)}}"> 关注者{{question.followers.count()}}  </a>
+        |    被浏览{{question_views}}</p><br/>
+    <p>
+    <a type="button" class="btn btn-default que-button right" href="#answer">写回答</a>
+    {% if current_user.is_following_question(question) %}
+    <a type="button" class="btn btn-default" href="{{url_for('main.unfollow_question', id=question.id)}}">
+        取消关注
+    </a>
+    {% else %}
+    <a type="button" class="btn btn-primary" href="{{url_for('main.follow_question', id=question.id)}}">
+        关注问题
+    </a>
+    </p>
+    {% endif %}
+
+</div>
+{% endblock %}

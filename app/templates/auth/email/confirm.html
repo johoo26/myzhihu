@@ -1,0 +1,4 @@
+<p>亲爱的 {{user.username}}:</p>
+<p>欢迎加入我们,请<a href="{{url_for('auth.confirm', token=token, _external=True)}}">点击这里</a>完成注册. </p>
+<p>若您无法点击以上链接，请复制{{url_for('auth.confirm', token=token, _external=True)}}地址到浏览器中打开.</p>
+<p><small>请注意：不要回复本邮件.</small></p>

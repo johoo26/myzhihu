@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}{{content}}-搜索结果-知乎{% endblock %}
+
+{% block page_content %}
+{% if not answers.count() == 0 %}
+<h3><i>{{query}}</i>的搜索结果:</h3>
+{% else %}
+<h3>找不到<i>{{query}}</i>相关内容</h3>
+{% endif %}
+<div>
+    {% for answer in answers %}
+        {% include "main/_answer.html"%}
+    {% endfor %}
+</div>
+{% endblock %}

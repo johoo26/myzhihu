@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}话题广场 - 知乎{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <b>话题广场</b>
+    <a style="float:right;" href="{{url_for('main.add_topic')}}">添加话题</a>
+
+</div>
+<div>
+    {% for topic in topics %}
+    <a type="button" class="btn btn-default btn-sm topic-button"
+       href="{{url_for('main.topic_dynamics', id=topic.id)}}">
+        {{topic.name}}
+    </a>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}账号设置 - 知乎{% endblock %}
+
+{% block page_content %}
+<div class="profile-top">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#">账号和密码</a> </li>
+    </ul>
+</div>
+<div class="profile-top">
+    <p>邮箱<span style="padding-left:80px;">{{email}}<a href="{{url_for('auth.reset_email_request')}}">修改</a> </span> </p><br/>
+    <p>账号密码<span style="padding-left:50px;"><a href="{{url_for('auth.change_password')}}">修改密码</a> </span> </p>
+</div>
+{% endblock %}

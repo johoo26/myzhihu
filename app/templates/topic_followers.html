@@ -1,0 +1,32 @@
+{% extends "topic.html" %}
+
+{% block title %}关注 - {{topic.name}} - 话题的人 - 知乎{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h4>{{topic.name}}</h4>
+</div>
+<div>
+    {% for follower in topic.followers %}
+    <a href="{{url_for('main.profile', username=follower.username)}}">
+        <img class="img-round profile-thumbnail" src="{{follower.gravatar(size=36)}}" />
+    </a>
+    <div class="answerers">
+    <a style="font-weight:bold;" href="{{url_for('main.profile', username=follower.username)}}">{{follower.username}}</a>
+    <div class="right">
+        {% if current_user != follower %}
+        {% if current_user.is_following(follower) %}
+        <a type="button" class="btn btn-default btn-xs"
+           href="{{url_for('main.unfollow', username=follower.username)}}">取消关注</a>
+        {% else %}
+        <a type="button" class="btn btn-success btn-xs"
+           href="{{url_for('main.follow', username=follower.username)}}">+ 关注</a>
+        {% endif %}
+        {% endif %}
+    </div>
+        <p style="font-size:smaller;">{{follower.description}}</p>
+        <p style="font-size:smaller;">回答了{{follower.answers_of_topic(topic)}}个问题</p>
+    </div><hr/>
+    {% endfor %}
+</div>
+{% endblock %}

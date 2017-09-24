@@ -1,0 +1,27 @@
+{% extends "main/_profile.html" %}
+{% import "_macros.html" as macro %}
+{% block more_info %}
+<div>
+    <ul class="nav nav-tabs">
+        <li><a href="{{url_for('main.profile', username=user.username)}}">动态</a> </li>
+        <li><a href="{{url_for('main.people_answers',username=user.username)}}">回答{{user.answers.count()}}</a> </li>
+        <li><a href="{{url_for('main.people_asks', username=user.username)}}">提问{{user.questions_asked.count()}}</a> </li>
+        <li><a href="{{url_for('main.followers',username=user.username)}}">关注他的人</a> </li>
+        <li><a href="{{url_for('main.followings',username=user.username)}}">他关注的人</a> </li>
+        <li><a href="{{url_for('main.people_following_topics',username=user.username)}}">关注的话题</a> </li>
+        <li class="active"><a href="{{url_for('main.people_following_questions',username=user.username)}}">关注的问题</a> </li>
+    </ul>
+</div>
+<div class="profile-top">
+    {% for question in questions %}
+    <p><a class="black-bold-link" href="{{url_for('main.question', id=question.id)}}">{{question.title}}</a> </p>
+    <p class="grey">{{moment(question.timestamp).format('L')}} * {{question.answers.count()}}个回答 * {{question.followers.count()}}个关注</p>
+    <hr/>
+    {% endfor %}
+    {% if pagination %}
+    <div class="pagination">
+        {{macro.pagination_widget(pagination, 'main.people_following_questions', username=user.username)}}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

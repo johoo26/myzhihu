@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}{{answer.question.title}} - 回答 - 知乎{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <p><a class="topic-name" href="{{url_for('main.question', id=answer.question.id)}}">{{answer.question.title}}</a></p>
+    <a href="{{url_for('main.profile', username=answer.author.username)}}">
+        <img class="img-rounded profile-thumbnail" src="{{answer.author.gravatar(size=36)}}" />
+    </a>
+    <div class="answerers">
+    <a href="{{url_for('main.profile', username=answer.author.username)}}"><b>{{answer.author.username}}</b></a>
+    <p><small>{{answer.author.description}}</small></p>
+    </div>
+    <div>{{answer.body}}</div><br/>
+    <p class="time">
+        编辑于
+        {{moment(answer.timestamp).format('L')}}
+        {% if current_user == answer.author %}
+        <a class="right delete" href="{{url_for('main.delete_answer', id=answer.id)}}">删除回答</a>
+        <a  href="{{url_for('main.edit_answer', id=answer.id)}}">修改回答</a>
+        {% endif %}
+    </p>
+    {% if not current_user.have_liked(answer) %}
+    <a href="{{url_for('main.like_answer', id=answer.id)}}">
+        <span class="glyphicon glyphicon-thumbs-up unliked">
+            {% if answer.likes.count() != 0%}
+            {{answer.likes.count()}}
+            {% endif %}
+        </span>
+    </a>
+    {% else %}
+    <a href="{{url_for('main.dislike_answer', id=answer.id)}}">
+        <span class="glyphicon glyphicon-thumbs-up liked">{{answer.likes.count()}}</span>
+    </a>
+    {% endif %}
+    <span class="glyphicon glyphicon-comment right">
+        {% if answer.comments.count() != 0 %}
+        {{answer.comments.count()}}条评论
+        {% else %}
+        添加评论
+        {% endif %}
+        </span>
+</div>
+<div>
+    <div>
+        {%for comment in answer.comments %}
+        <div>
+            <a href="{{url_for('main.profile', username=comment.author.username)}}">
+                <img class="img-rounded" src="{{comment.author.gravatar(size=18)}}" />
+            </a>
+            <a href="{{url_for('main.profile', username=comment.author.username)}}">
+                <small>{{comment.author.username}}</small>
+            </a>
+            <small class="right">{{moment(comment.timestamp).fromNow(refresh=True)}}</small>
+        </div>
+        <div>
+            <p class="comment">{{comment.body}}</p><hr/>
+        </div>
+        {% endfor %}
+    </div>
+    {{wtf.quick_form(form)}}
+</div>
+{% endblock %}

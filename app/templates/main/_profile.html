@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}{{user.username}} - 知乎{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <p><img class="img-rounded profile-thumbnail profile-top" src="{{user.gravatar(size=180)}}"/></p>
+    <div class="profile-header">
+        <p class="content">
+            <b class="username">{{user.username}}</b>
+
+                {% if user.gender %}
+                    {% if user.gender == 'Male' %}
+                    <span class="glyphicon glyphicon-king"></span>
+                    {% else%}
+                    <span class="glyphicon glyphicon-queen"></span>
+                    {% endif %}
+                {% endif %}
+
+            {% if user.description %}
+            <span class="description">{{user.description}}</span>
+            {% endif %}
+        </p>
+        {% if user.location %}
+        <p><b>居住城市   </b><span class="profile-value"> {{user.location}}</span></p><br/>
+        {% endif %}
+        {% if user.profession %}
+        <p><b>所在行业  </b><span class="profile-value">{{user.profession}}</span> </p><br/>
+        {% endif %}
+        {% if user.working_experience %}
+        <p><b>职业经历  </b><span class="profile-value"> {{user.working_experience}}</span></p><br/>
+        {% endif %}
+        {% if user.education_experience %}
+        <p><b>教育经历  </b><span class="profile-value"> {{user.education_experience}}</span></p><br/>
+        {% endif %}
+        {% if user.about_me %}
+        <p><b>个人简介  </b><span class="profile-value"> {{user.about_me}}</span></p>
+        {% endif %}
+
+
+    </div>
+</div>
+<div>{% block more_info %}{% endblock %}</div>
+{% endblock %}
+
+{% block page_side %}
+<div class="content">
+        <p>
+            <a href="{{url_for('main.followings', username=user.username)}}">关注了{{user.followings.count()}}
+            </a> | <a href="{{url_for('main.followers', username=user.username)}}">关注者{{user.followers.count()}}</a>
+        </p>
+        {% if user!=current_user %}
+            {% if not current_user.is_following(user) %}
+            <a type="button" class="btn btn-primary"
+               href="{{url_for('main.follow', username=user.username)}}"> +关注</a>
+            {% else %}
+            <a type="button" class="btn btn-default"
+               href="{{url_for('main.unfollow', username=user.username)}}">取消关注</a>
+            {% endif %}
+        {% endif %}<br/>
+        {% if user==current_user %}
+        <a type="button" class="btn btn-info "
+           href="{{url_for('main.editprofile')}}">
+            编辑个人资料
+        </a>
+        {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends "topic.html" %}
+{% import "_macros.html" as macro %}
+{% block title %}{{topic.name}}-热门回答-知乎{% endblock %}
+
+{% block page_content %}
+<div>
+    <p class="topic-name">{{topic.name}}</p>
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#"> 动态</a></li>
+        <li><a href="{{url_for('main.topic_unanswered', id=topic.id)}}">等待回答</a></li>
+    </ul>
+    <div class="profile-top">
+
+        {% for answer in answers %}
+            {% include "main/_answer.html" %}
+        {% endfor %}
+
+        {% if pagination %}
+        <div class="pagination">
+        {{macro.pagination_widget(pagination, 'main.topic_dynamics', id=topic.id)}}
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+

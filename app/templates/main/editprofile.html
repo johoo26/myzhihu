@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}编辑个人资料-知乎{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <img class="img-rounded profile-thumbnail" src="{{current_user.gravatar(size=180)}}"/>
+    <div class="profile-header">
+        <h1>{{current_user.username}}</h1>
+        <div class="col-md-6">
+            {{wtf.quick_form(form)}}
+        </div>
+    </div>
+</div>
+{% endblock %}

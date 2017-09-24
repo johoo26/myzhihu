@@ -1,0 +1,5 @@
+亲爱的 {{user.username}}:
+    欢迎加入我们,请点击以下链接已完成注册.
+    {{url_for('auth.confirm', token=token, _external=True)}}
+
+请注意:不要回复本邮件.
