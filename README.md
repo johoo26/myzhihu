@@ -28,4 +28,4 @@
 <p>运行</p>
 <p><code>$ python manage.py runserver</code></p>
 <p>打开本地浏览器访问<code>127.0.0.1:5000</code>即可。</p>
-
+<h3>Enjoy it!</h3>
