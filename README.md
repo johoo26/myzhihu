@@ -29,4 +29,5 @@
 <p>运行</p>
 <p><code>$ python manage.py runserver</code></p>
 <p>打开本地浏览器访问<code>127.0.0.1:5000</code>即可。</p>
+<h3>Heroku和其他云服务器部署请参考网上教程</h3>
 <h3>Enjoy it!</h3>
