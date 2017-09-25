@@ -99,3 +99,18 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+#pyc
+*.pyc
+
+#migrations
+migrations/
+
+#tmp
+tmp/
+
+#sqlite
+*.sqlite
+
+Procfile
+

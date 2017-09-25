@@ -2,8 +2,7 @@
 # -*- coding:utf-8 -*-
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timedelta
-from . import db
-from . import login_manager
+from . import db, login_manager
 from flask_login import UserMixin, current_user, AnonymousUserMixin
 from flask import request, current_app
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
@@ -15,6 +14,7 @@ import bleach
 
 
 class Permission(object):
+    """用户权限"""
     FOLLOW = 0x01
     COMMENT = 0x02
     WRITE_ARTICLES = 0x04
@@ -22,17 +22,20 @@ class Permission(object):
     ADMINISTER = 0x80
 
 class Follow(db.Model):
+    """关注用户/被关注用户 表格"""
     __tablename__  = 'follows'
 
     follower_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
     followed_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
     timestamp = db.Column(db.DateTime(), default=datetime.utcnow)
 
+#问题/关注问题的用户表格
 questions_users = db.Table('questions_users',
                     db.Column('question_id', db.Integer, db.ForeignKey('questions.id')),
                     db.Column('follower_id', db.Integer, db.ForeignKey('users.id')))
 
 class Question(db.Model):
+    """问题表格。每个问题可能关联多个话题，有多个关注者，有多个回答。"""
     __tablename__ = 'questions'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -46,6 +49,7 @@ class Question(db.Model):
                                 lazy='dynamic')
     answers = db.relationship('Answer', backref='question', lazy='dynamic')
 
+    #生成大量虚拟问题
     @staticmethod
     def generate_fake(count=500):
 
@@ -70,6 +74,7 @@ class Question(db.Model):
 
 
 class User(UserMixin, db.Model):
+    """模型中最关键的，用户表格。"""
     __tablename__ = 'users'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -90,17 +95,22 @@ class User(UserMixin, db.Model):
     answers = db.relationship('Answer', backref='author', lazy='dynamic')
     comments = db.relationship('Comment', backref='author', lazy='dynamic')
     likes = db.relationship('Like', backref='user', lazy='dynamic')
+
+    #用户作为关注方
     followings = db.relationship('Follow',
                                 foreign_keys = [Follow.follower_id],
                                 backref = db.backref('follower', lazy='joined'),
                                 lazy='dynamic',
                                 cascade='all, delete-orphan')
+
+    #用户作为被关注方
     followers = db.relationship('Follow',
                                 foreign_keys = [Follow.followed_id],
                                 backref=db.backref('followed', lazy='joined'),
                                 lazy='dynamic',
                                 cascade='all, delete-orphan')
 
+    #生成虚拟用户
     @staticmethod
     def generate_fake(count=100):
 
@@ -123,6 +133,7 @@ class User(UserMixin, db.Model):
             except IntegrityError:
                 db.session.rollback()
 
+    #构造方法。实例化用户时，设置用户角色和avatar_hash用于头像
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
         if self.role is None:
@@ -203,7 +214,7 @@ class User(UserMixin, db.Model):
             self.questions_following.remove(question)
             db.session.add(self)
 
-
+    #用户在某一话题下的回答数量
     def answers_of_topic(self, topic):
         answer_counts = 0
         for answer in self.answers:
@@ -211,44 +222,53 @@ class User(UserMixin, db.Model):
                 answer_counts += 1
         return answer_counts
 
+    #判断用户是否赞过回答
     def have_liked(self, answer):
         return answer.likes.filter_by(user_id=current_user.id).first() is not None
 
+    #找出用户关注的全部话题下的所有回答并按照时间降序排列
     @property
     def answers_interested_topics(self):
         return db.session.query(Answer).join(Question).filter(
             Question.topics.any(Topic.followers.any(User.id ==
                     self.id))).order_by(Answer.timestamp.desc())
 
+    #找出关注的所有人的回答并按时间降序排列
     @property
     def answers_followings(self):
         return Answer.query.join(Follow, Follow.followed_id == Answer.user_id).\
             filter(Follow.follower_id == self.id).order_by(Answer.timestamp.desc())
 
+    #找出关注的所有人的赞同并按时间降序排列
     @property
     def likes_followings(self):
         return Like.query.join(Follow, Follow.followed_id == Like.user_id).\
             filter(Follow.follower_id == self.id).order_by(Like.timestamp.desc())
 
+    #找出一用户所有的赞同并按时间降序排列
     @property
     def personal_likes(self):
         return Like.query.order_by(Like.timestamp.desc()).\
             filter(Like.user_id == self.id)
 
+    #找出一用户所有的回答并按时间降序排列
     @property
     def personal_answers(self):
         return Answer.query.order_by(Answer.timestamp.desc()).\
             filter(Answer.user_id == self.id)
 
+    #找出一用户所有提问并按时间降序排列
     @property
     def personal_questions_asked(self):
-        return Question.query.join(User, User.id == Question.user_id).order_by(
-            Question.timestamp.desc()).filter(Question.user_id == self.id)
+        return Question.query.order_by(Question.timestamp.desc()).\
+            filter(Question.user_id == self.id)
 
+    #为注册用户生产令牌
     def generate_confirm_token(self, expiration=3600):
         s = Serializer(current_app.config['SECRET_KEY'], expiration)
         return s.dumps({'confirm':self.id})
 
+    #验证注册用户的令牌
     def confirm(self, token):
         s = Serializer(current_app.config['SECRET_KEY'])
         try:
@@ -299,6 +319,9 @@ class User(UserMixin, db.Model):
         db.session.add(self)
         return True
 
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
 class AnonymousUser(AnonymousUserMixin):
     def can(self, permissions):
@@ -307,11 +330,11 @@ class AnonymousUser(AnonymousUserMixin):
     def is_administer(self):
         return False
 
-
 login_manager.anonymous_user = AnonymousUser
 
 
 class Role(db.Model):
+    """定义网站的用户角色，普通用户/协管员/管理员"""
     __tablename__ = 'roles'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -320,6 +343,7 @@ class Role(db.Model):
     permissions = db.Column(db.Integer)
     default = db.Column(db.Boolean, default=False, index=True)
 
+    #把角色填充到roles表格
     @staticmethod
     def insert_roles():
         roles = {
@@ -341,40 +365,45 @@ class Role(db.Model):
     def __repr__(self):
         return '<Role:{}>'.format(self.name)
 
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(int(user_id))
-
+#用户/话题表格，多对多关系
 topics_users = db.Table('topics_users',
                 db.Column('topic_id', db.Integer, db.ForeignKey('topics.id')),
                 db.Column('user_id', db.Integer, db.ForeignKey('users.id')))
 
+#话题/问题表格，多对多关系
 topics_questions = db.Table('topics_questions',
                     db.Column('topic_id', db.Integer, db.ForeignKey('topics.id')),
                     db.Column('question_id', db.Integer, db.ForeignKey('questions.id')))
 
 
 class Topic(db.Model):
+    """话题模型。一个话题有多个关注的用户，多个问题"""
     __tablename__ = 'topics'
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128), unique=True)
     description = db.Column(db.Text())
+
+    #话题关注者
     followers = db.relationship('User',
                           secondary=topics_users,
                           backref=db.backref('topics', lazy='dynamic'),
                           lazy='dynamic')
+
+    #话题下的问题
     questions = db.relationship('Question',
                             secondary=topics_questions,
                             backref=db.backref('topics', lazy='dynamic'),
                             lazy='dynamic')
 
+    #找出一个话题下所有的回答并按时间降序排列
     @property
     def all_answers(self):
         return db.session.query(Answer).join(Question).filter(
             Question.topics.any(Topic.id == self.id)).order_by(
             Answer.timestamp.desc())
 
+    #生成大量虚拟话题
     @staticmethod
     def generate_fake(count=50):
         from sqlalchemy.exc import IntegrityError
@@ -393,6 +422,9 @@ class Topic(db.Model):
 
 
 class Answer(db.Model):
+    """回答模型。一个回答从属于一个问题，一个作者。
+    一个回答可能有多个赞同和评论。
+    回答可以使用部分HTML格式"""
     __tablename__ = 'answers'
 
     id = db.Column(db.Integer, primary_key = True)
@@ -403,9 +435,9 @@ class Answer(db.Model):
     comments = db.relationship('Comment', backref='answer', lazy='dynamic')
     likes = db.relationship('Like', backref='answer', lazy='dynamic')
     likes_count = db.Column(db.Integer)
-    unread = db.Column(db.Boolean, default=True)
     body_html = db.Column(db.Text)
 
+    #生成大量虚拟回答
     @staticmethod
     def generate_fake(count=2000):
 
@@ -425,17 +457,20 @@ class Answer(db.Model):
             except IntegrityError:
                 db.session.rollback()
 
+    #定义回答允许使用的标签
     @staticmethod
     def on_changed_body(target, value, oldvalue, initiator):
         allowed_tags = ['a', 'abbr', 'acronym', 'b', 'blockquote', 'code',
                         'em', 'i',  'li', 'ol', 'ul', 'pre', 'strong', 'h1',
-                        'h2', 'h3', 'h4', 'p']
+                        'h2', 'h3', 'h4', 'p', 'br']
         target.body_html = bleach.linkify(bleach.clean(markdown(
             value, output_format = 'html'), tags=allowed_tags, strip=True))
 
+#监听回答，一旦有新回答就调用on_changed_body函数
 db.event.listen(Answer.body, 'set', Answer.on_changed_body)
 
 class Comment(db.Model):
+    """评论模型类"""
     __tablename__ = 'comments'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -443,8 +478,8 @@ class Comment(db.Model):
     body = db.Column(db.Text())
     answer_id = db.Column(db.Integer, db.ForeignKey('answers.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    agreements = db.Column(db.Integer, default=0)
 
+    #生成虚拟评论
     @staticmethod
     def generate_fake(count=4000):
 
@@ -466,6 +501,7 @@ class Comment(db.Model):
 
 
 class Like(db.Model):
+    """赞同模型类，一个赞同从属于一个回答/一个作者"""
     __tablename__ = 'likes'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -496,7 +532,7 @@ class Like(db.Model):
             except IntegrityError:
                 db.session.rollback()
 
+    #判断是否为一周内的赞同
     def weekly(self):
         time_in_one_week = datetime.utcnow() - timedelta(days=7)
         return self.timestamp > time_in_one_week
-

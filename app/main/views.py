@@ -15,6 +15,7 @@ from datetime import datetime, timedelta
 
 question_views = 0
 
+#请求结束时调用，把查询时间超过限定值的SQL语句记录日志
 @main.after_app_request
 def after_request(response):
     for query in get_debug_queries():
@@ -24,6 +25,7 @@ def after_request(response):
                    query.context))
     return response
 
+#首页；根据cookies判断要看的内容和页数
 @main.route('/')
 @login_required
 def index():
@@ -75,6 +77,7 @@ def show_likes_followings():
     resp.set_cookie('page', str(PageNum))
     return resp
 
+#个人页面，默认为个人的点赞动态
 @main.route('/people/<username>/activities')
 @login_required
 def profile(username):
@@ -85,6 +88,7 @@ def profile(username):
     return render_template('main/profile_activities.html',
                            pagination=pagination,user=user, likes=likes)
 
+#个人回答集合
 @main.route('/people/<username>/answers')
 @login_required
 def people_answers(username):
@@ -95,6 +99,7 @@ def people_answers(username):
     return render_template('main/profile_answers.html',
                            pagination=pagination,user=user, answers=answers)
 
+#个人提问集合
 @main.route('/people/<username>/asks')
 @login_required
 def people_asks(username):
@@ -102,18 +107,21 @@ def people_asks(username):
     asks = user.personal_questions_asked
     return render_template('main/profile_asks.html', user=user, asks=asks)
 
+#关注的用户
 @main.route('/people/<username>/followerings')
 @login_required
 def followings(username):
     user = User.query.filter_by(username=username).first_or_404()
     return render_template('main/followings.html', user=user)
 
+#关注该用户的人
 @main.route('/people/<username>/followers')
 @login_required
 def followers(username):
     user = User.query.filter_by(username=username).first_or_404()
     return render_template('main/followers.html', user=user)
 
+#关注的话题
 @main.route('/people/<username>/following/topics')
 @login_required
 def people_following_topics(username):
@@ -121,6 +129,7 @@ def people_following_topics(username):
     topics = user.topics
     return render_template('main/profile_topics.html', user=user, topics=topics)
 
+#关注的问题
 @main.route('/people/<username>/following/questions')
 @login_required
 def people_following_questions(username):
@@ -132,6 +141,7 @@ def people_following_questions(username):
     return render_template('main/profile_questions.html',
                 pagination=pagination, user=user, questions=questions)
 
+#编辑个人资料
 @main.route('/people/edit', methods=['GET', 'POST'])
 @login_required
 def editprofile():
@@ -159,12 +169,14 @@ def editprofile():
     form.about_me.data = current_user.about_me
     return render_template('main/editprofile.html', form=form)
 
+#话题广场，包含网站所有话题
 @main.route('/topics')
 @login_required
 def topic_square():
     topics = Topic.query.all()
     return render_template('topic_square.html', topics=topics)
 
+#添加话题
 @main.route('/addtopic', methods=['GET', 'POST'])
 @login_required
 def add_topic():
@@ -177,6 +189,7 @@ def add_topic():
         return redirect(url_for('main.topic_square'))
     return render_template('add_topic.html', form=form)
 
+#话题的动态，按照最新时间排布话题的所有回答
 @main.route('/topic/<int:id>/hot')
 @login_required
 def topic_dynamics(id):
@@ -187,6 +200,7 @@ def topic_dynamics(id):
     return render_template('topic_dynamics.html',pagination=pagination,
                            answers=answers, topic=topic)
 
+#话题下的所有问题
 @main.route('/topic/<int:id>/unanswered')
 @login_required
 def topic_unanswered(id):
@@ -197,12 +211,14 @@ def topic_unanswered(id):
     return render_template('topic_unanswered.html', pagination=pagination,
                            questions=questions, topic=topic)
 
+#话题的关注者
 @main.route('/topic/<int:id>/followers')
 @login_required
 def topic_followers(id):
     topic = Topic.query.get_or_404(id)
     return render_template('topic_followers.html', topic=topic)
 
+#提问
 @main.route('/asking', methods=['GET', 'POST'])
 @login_required
 def asking():
@@ -222,6 +238,7 @@ def asking():
         return redirect(url_for('main.question', id=question.id))
     return render_template('main/asking.html', form=form)
 
+#单个问题的页面
 @main.route('/question/<int:id>', methods=['GET', 'POST'])
 @login_required
 def question(id):
@@ -243,6 +260,7 @@ def question(id):
     return render_template('main/question.html', question=question,
                            form=form, question_views=question_views)
 
+#单个回答的页面
 @main.route('/question/<int:id_que>/answer/<int:id_ans>', methods=['GET', 'POST'])
 @login_required
 def answer(id_que, id_ans):
@@ -260,6 +278,7 @@ def answer(id_que, id_ans):
         return redirect(url_for('main.answer', id_que=answer.question.id, id_ans=answer.id))
     return render_template('main/answer.html', answer=answer, form=form)
 
+#修改回答
 @main.route('/answer/<int:id>', methods=['GET', 'POST'])
 @login_required
 def edit_answer(id):
@@ -276,6 +295,7 @@ def edit_answer(id):
     form.body.data = answer.body
     return render_template('main/edit_answer.html', form=form, answer=answer)
 
+#删除回答
 @main.route('/delete/answer/<int:id>')
 @login_required
 def delete_answer(id):
@@ -286,6 +306,7 @@ def delete_answer(id):
     flash(u'已删除回答！')
     return redirect(url_for('main.question', id=answer.question.id))
 
+#删除问题
 @main.route('/delete/question/<int:id>')
 @login_required
 def delete_question(id):
@@ -296,6 +317,7 @@ def delete_question(id):
     flash(u'已删除问题！')
     return redirect(url_for('main.index'))
 
+#关注其他用户
 @main.route('/people/<username>/follow')
 @login_required
 @permission_required(Permission.FOLLOW)
@@ -308,9 +330,9 @@ def follow(username):
         flash(u'您已经关注过了')
         return redirect(url_for('main.profile', username=username))
     current_user.follow(user)
-    #flash(u'成功关注{}'.format(username))
     return redirect(url_for('main.profile', username=username))
 
+#取关用户
 @main.route('/people/<username>/unfollow')
 @login_required
 @permission_required(Permission.FOLLOW)
@@ -323,10 +345,9 @@ def unfollow(username):
         flash(u'您并未关注{}'.format(username))
         return redirect(url_for('main.profile', username=username))
     current_user.unfollow(user)
-    #flash(u'您已不再关注{}'.format(username))
     return redirect(url_for('main.profile', username=username))
 
-
+#关注话题
 @main.route('/topic/<int:id>/follow')
 @login_required
 @permission_required(Permission.FOLLOW)
@@ -338,6 +359,7 @@ def follow_topic(id):
     current_user.follow_topic(topic)
     return redirect(url_for('main.topic_dynamics', id=topic.id))
 
+#取关话题
 @main.route('/topic/<int:id>/unfollow')
 @login_required
 @permission_required(Permission.FOLLOW)
@@ -349,6 +371,7 @@ def unfollow_topic(id):
     current_user.unfollow_topic(topic)
     return redirect(url_for('main.topic_dynamics', id=topic.id))
 
+#关注问题
 @main.route('/question/<int:id>/follow')
 @login_required
 @permission_required(Permission.FOLLOW)
@@ -360,12 +383,14 @@ def follow_question(id):
     current_user.follow_question(question)
     return redirect(url_for('main.question', id=question.id))
 
+#某个问题的关注者
 @main.route('/question/<int:id>/followers')
 @login_required
 def question_followers(id):
     question = Question.query.get_or_404(id)
     return render_template('main/question_followers.html', question=question)
 
+#取关问题
 @main.route('/question/<int:id>/unfollow')
 @login_required
 @permission_required(Permission.FOLLOW)
@@ -377,18 +402,20 @@ def unfollow_question(id):
     current_user.unfollow_question(question)
     return redirect(url_for('main.question', id=question.id))
 
+#赞同回答
 @main.route('/answer/<int:id>/like')
 @login_required
 @permission_required(Permission.COMMENT)
 def like_answer(id):
     answer = Answer.query.get_or_404(id)
     count = answer.likes.count()
-    like = Like(answer=answer, user=current_user)
+    like = Like(answer=answer, user=current_user._get_current_object())
     db.session.add(like)
     answer.likes_count = count + 1
     db.session.add(answer)
     return redirect(url_for('main.question', id=answer.question.id))
 
+#取消赞同回答
 @main.route('/answer/<int:id>/dislike')
 @login_required
 @permission_required(Permission.COMMENT)
@@ -399,6 +426,7 @@ def dislike_answer(id):
         db.session.delete(like)
     return redirect(url_for('main.question', id=answer.question.id))
 
+#显示每天最热的回答
 @main.route('/explore/daily-hot')
 @login_required
 def daily_hot():
@@ -412,6 +440,7 @@ def daily_hot():
                            pagination=pagination,
                            answers_daily_hot=answers_daily_hot)
 
+#显示每月最热回答
 @main.route('/explore/monthly-hot')
 @login_required
 def monthly_hot():
@@ -425,7 +454,7 @@ def monthly_hot():
                            pagination=pagination,
                            answers_monthly_hot=answers_monthly_hot)
 
-
+#搜索回答
 @main.route('/search', methods=['GET', 'POST'])
 @login_required
 def search():
@@ -433,13 +462,10 @@ def search():
         return redirect(url_for('main.index'))
     return redirect(url_for('main.search_results', query=g.search_form.search.data))
 
+#搜索回答并按时间降序排列
 @main.route('/search_results/<query>')
 @login_required
 def search_results(query):
     answers = Answer.query.filter(Answer.body.ilike("%{}%".format(query.encode('utf-8'))))\
         .order_by(Answer.timestamp.desc()).limit(30)
     return render_template('search.html', answers=answers, query=query)
-
-
-
-

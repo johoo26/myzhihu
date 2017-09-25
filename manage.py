@@ -7,7 +7,7 @@ from app import create_app, db
 from app.models import User, Role, Topic, Comment, Permission, \
     Question, Answer, Like, Follow
 
-import os
+
 COV = None
 if os.environ.get('FLASK_COVERAGE'):
     import coverage

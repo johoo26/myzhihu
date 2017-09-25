@@ -5,7 +5,7 @@ import os
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 class Config(object):
-    'this is the base class for development/production/testing config'
+    """基本配置参数"""
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'thisishardto guess..'
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
     SQLALCHEMY_TRACK_MODIFICATIONS = False

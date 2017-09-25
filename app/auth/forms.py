@@ -7,7 +7,9 @@ from wtforms import StringField, SubmitField, PasswordField, ValidationError, \
 from wtforms.validators import DataRequired, Email, EqualTo, Length, Regexp
 from ..models import User
 
+
 class RegisterForm(FlaskForm):
+    """注册表单"""
     username = StringField(u'用户名', validators=[DataRequired(), Length(1,32)])
     email = StringField(u'邮箱地址', validators=[DataRequired(), Email()])
     password = PasswordField(u'密码', validators=[DataRequired(), Length(1,32),
@@ -21,9 +23,7 @@ class RegisterForm(FlaskForm):
     def validate_email(self, field):
         if User.query.filter_by(email=field.data).first():
             raise ValidationError(u'该邮箱已存在')
-    def validate_dnsname(self, field):
-        if User.query.filter_by(dnsname=field.data).first():
-            raise ValidationError(u'域名已被占用')
+
 
 class LoginForm(FlaskForm):
     email = StringField(u'邮箱地址', validators=[DataRequired(), Length(1, 32), Email()])
