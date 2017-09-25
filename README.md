@@ -21,6 +21,7 @@
 <h3>本地使用</h3>
 <p>clone到本地，安装需要的库</p>
 <p><code>$ pip install -r requirements.txt</code></p>
+<p>配置</p>
 <p><code>config.py</code>中的<code>ZHIHU_MAIL_SENDER</code>更改成你的有效邮箱。配置脚本中其他环境变量。</p>
 <p>创建数据库，设定角色权限</p>
 <p><code>$ python manage.py shell</code></p>
