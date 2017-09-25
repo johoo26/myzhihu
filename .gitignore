@@ -108,6 +108,7 @@ migrations/
 
 #tmp
 tmp/
+tmp
 
 #sqlite
 *.sqlite
