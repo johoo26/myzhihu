@@ -20,7 +20,6 @@ class Config(object):
     ZHIHU_ADMIN = os.environ.get('ZHIHU_ADMIN')
     ZHIHU_SLOW_DB_QUERY_TIME = 0.5
 
-
     @staticmethod
     def init_app(self):
         pass

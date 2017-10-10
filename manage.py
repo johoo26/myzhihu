@@ -18,6 +18,7 @@ app = create_app(os.getenv('CONFIG_NAME') or 'default')
 manager = Manager(app)
 migrate = Migrate(app, db)
 
+
 def make_context_shell():
     return dict(app=app, db=db, User=User, Role=Role,Answer=Answer,Like=Like,Follow=Follow,
                 Comment=Comment, Permission=Permission, Topic=Topic, Question=Question)
