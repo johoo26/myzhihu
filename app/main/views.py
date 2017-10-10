@@ -433,7 +433,7 @@ def daily_hot():
     page = request.args.get('page', 1, type=int)
     in_one_day = datetime.utcnow() - timedelta(days=1)
     pagination = Answer.query.filter(Answer.timestamp > in_one_day).filter(
-        Answer.likes_count > 2).order_by(Answer.timestamp.desc()).\
+        Answer.likes_count > 1).order_by(Answer.timestamp.desc()).\
         paginate(page, error_out=False)
     answers_daily_hot = pagination.items
     return render_template('main/daily_hot.html',
@@ -447,7 +447,7 @@ def monthly_hot():
     page = request.args.get('page', 1, type=int)
     in_a_month = datetime.utcnow() - timedelta(days=30)
     pagination = Answer.query.filter(Answer.timestamp > in_a_month).\
-        filter(Answer.likes_count > 10).order_by(Answer.timestamp.desc()).\
+        filter(Answer.likes_count > 1).order_by(Answer.timestamp.desc()).\
         paginate(page, error_out=False)
     answers_monthly_hot = pagination.items
     return render_template('/main/monthly_hot.html',
@@ -466,6 +466,6 @@ def search():
 @main.route('/search_results/<query>')
 @login_required
 def search_results(query):
-    answers = Answer.query.filter(Answer.body.ilike("%{}%".format(query.encode('utf-8'))))\
+    answers = Answer.query.filter(Answer.body.ilike('%{}%'.format(query.encode('utf-8'))))\
         .order_by(Answer.timestamp.desc()).limit(30)
     return render_template('search.html', answers=answers, query=query)
