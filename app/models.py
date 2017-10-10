@@ -2,7 +2,7 @@
 # -*- coding:utf-8 -*-
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timedelta
-from . import db, login_manager
+from . import db, login_manager, whooshee
 from flask_login import UserMixin, current_user, AnonymousUserMixin
 from flask import request, current_app
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
@@ -420,7 +420,7 @@ class Topic(db.Model):
             except IntegrityError:
                 db.session.rollback()
 
-
+@whooshee.register_model('body')
 class Answer(db.Model):
     """回答模型。一个回答从属于一个问题，一个作者。
     一个回答可能有多个赞同和评论。

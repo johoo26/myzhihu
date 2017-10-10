@@ -466,6 +466,6 @@ def search():
 @main.route('/search_results/<query>')
 @login_required
 def search_results(query):
-    answers = Answer.query.filter(Answer.body.ilike('%{}%'.format(query.encode('utf-8'))))\
+    answers = Answer.query.whooshee_search(query)\
         .order_by(Answer.timestamp.desc()).limit(30)
     return render_template('search.html', answers=answers, query=query)

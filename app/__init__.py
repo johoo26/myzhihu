@@ -8,6 +8,7 @@ from flask_bootstrap import Bootstrap
 from flask_mail import Mail
 from flask_login import LoginManager
 from flask_pagedown import PageDown
+from flask_whooshee import Whooshee
 from config import config
 
 
@@ -16,6 +17,7 @@ moment = Moment()
 bootstrap = Bootstrap()
 mail = Mail()
 pagedown = PageDown()
+whooshee = Whooshee()
 
 login_manager = LoginManager()
 login_manager.session_protection = 'strong'
@@ -33,6 +35,7 @@ def create_app(config_name):
     mail.init_app(app)
     login_manager.init_app(app)
     pagedown.init_app(app)
+    whooshee.init_app(app)
 
     from .main import main as main_blueprint
     app.register_blueprint(main_blueprint) #注册蓝本
