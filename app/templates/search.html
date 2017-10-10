@@ -4,10 +4,10 @@
 
 {% block page_content %}
 {% if not answers.count() == 0 %}
-<h3><i>{{query}}</i>的搜索结果:</h3>
+<h3><span class="search">{{query}}</span>的搜索结果:</h3>
 {% else %}
-<h3>找不到<i>{{query}}</i>相关内容</h3>
-{% endif %}
+<h3>找不到<span class="search">{{query}}</span>相关内容</h3>
+{% endif %}<hr/>
 <div>
     {% for answer in answers %}
     <p><a class="liked" href="{{url_for('main.question', id=answer.question.id)}}">{{answer.question.title}}</a> </p>

@@ -19,6 +19,7 @@ class Config(object):
     ZHIHU_MAIL_SENDER = 'Zhihu Admin <nju_0913@163.com>'
     ZHIHU_ADMIN = os.environ.get('ZHIHU_ADMIN')
     ZHIHU_SLOW_DB_QUERY_TIME = 0.5
+    WHOOSHEE_MIN_STRING_LEN = 1
 
     @staticmethod
     def init_app(self):
