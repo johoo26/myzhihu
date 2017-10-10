@@ -10,6 +10,7 @@ from flask_login import LoginManager
 from flask_pagedown import PageDown
 from config import config
 
+
 db = SQLAlchemy()
 moment = Moment()
 bootstrap = Bootstrap()
