@@ -14,6 +14,7 @@
 </div>
 <div>
     {% for like in likes %}
+    {% if like.answer %}
     <p class="grey">赞同了回答<span class="right">{{moment(like.timestamp).fromNow(refresh=True)}}</span> </p>
     <p ><a class="black-bold-link" href="{{url_for('main.question', id=like.answer.question.id)}}">
         {{like.answer.question.title}}</a>
@@ -21,6 +22,7 @@
         {% for answer in [like.answer] %}
         {% include "main/_answer.html" %}
         {% endfor %}
+    {% endif %}
     {% endfor %}
     {% if pagination %}
     <div class="pagination">

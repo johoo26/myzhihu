@@ -10,6 +10,7 @@
 {% endif %}
 <div>
     {% for answer in answers %}
+    <p><a class="liked" href="{{url_for('main.question', id=answer.question.id)}}">{{answer.question.title}}</a> </p>
         {% include "main/_answer.html"%}
     {% endfor %}
 </div>
