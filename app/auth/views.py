@@ -86,7 +86,7 @@ def login():
 def logout():
     logout_user()
     flash(u'您已退出')
-    return redirect(url_for('auth.login'))
+    return redirect(url_for('main.index'))
 
 #设置页面，可以重设密码/邮箱
 @auth.route('/settings')
