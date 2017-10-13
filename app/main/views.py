@@ -29,6 +29,8 @@ def after_request(response):
 @main.route('/')
 def index():
     choice = int(request.cookies.get('choice', '3'))
+    if not current_user.is_authenticated:
+        choice = 3
     page = int(request.cookies.get('page', '1'))
     if choice == 2:
         answers = []
@@ -58,7 +60,7 @@ def index():
 def show_answers_interested_topics():
     PageNum = request.args.get('page', 1, type=int)
     resp = make_response(redirect(url_for('.index',)))
-    resp.set_cookie('choice', '0', max_age=30*24*60*60)
+    resp.set_cookie('choice', '0', max_age=30 * 24 * 60 * 60)
     resp.set_cookie('page', str(PageNum))
     return resp
 
@@ -67,7 +69,7 @@ def show_answers_interested_topics():
 def show_answers_followings():
     PageNum = request.args.get('page', 1, type=int)
     resp = make_response(redirect(url_for('.index')))
-    resp.set_cookie('choice', '1', max_age=30*24*60*60)
+    resp.set_cookie('choice', '1', max_age=30 * 24 * 60 * 60)
     resp.set_cookie('page', str(PageNum))
     return resp
 
@@ -76,7 +78,7 @@ def show_answers_followings():
 def show_likes_followings():
     PageNum = request.args.get('page', 1, type=int)
     resp = make_response(redirect(url_for('.index')))
-    resp.set_cookie('choice', '2', max_age=30*24*60*60)
+    resp.set_cookie('choice', '2', max_age=30 * 24 * 60 * 60)
     resp.set_cookie('page', str(PageNum))
     return resp
 
