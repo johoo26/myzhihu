@@ -27,9 +27,8 @@ def after_request(response):
 
 #首页；根据cookies判断要看的内容和页数
 @main.route('/')
-@login_required
 def index():
-    choice = int(request.cookies.get('choice', '0'))
+    choice = int(request.cookies.get('choice', '3'))
     page = int(request.cookies.get('page', '1'))
     if choice == 2:
         answers = []
@@ -41,12 +40,16 @@ def index():
             paginate(page, per_page=10, error_out=False)
         answers = pagination.items
         likes = []
-    else:
+    elif choice == 0:
         pagination = current_user.answers_interested_topics.\
             paginate(page, per_page=10, error_out=False)
         answers = pagination.items
         likes = []
-
+    else:
+        pagination = Answer.query.order_by(Answer.likes_count.desc()).\
+            paginate(page, per_page=10, error_out=False)
+        answers = pagination.items
+        likes = []
     return render_template('index.html', answers=answers,
                     likes=likes,choice=choice, pagination=pagination)
 
@@ -74,6 +77,14 @@ def show_likes_followings():
     PageNum = request.args.get('page', 1, type=int)
     resp = make_response(redirect(url_for('.index')))
     resp.set_cookie('choice', '2', max_age=30*24*60*60)
+    resp.set_cookie('page', str(PageNum))
+    return resp
+
+@main.route('/all-answers')
+def show_all():
+    PageNum = request.args.get('page', 1, type=int)
+    resp = make_response(redirect(url_for('.index')))
+    resp.set_cookie('choice', '3', max_age=30 * 24 * 60 * 60)
     resp.set_cookie('page', str(PageNum))
     return resp
 

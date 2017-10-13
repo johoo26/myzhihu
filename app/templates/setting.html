@@ -6,6 +6,9 @@
 <div class="profile-top">
     <ul class="nav nav-tabs">
         <li class="active"><a href="#">账号和密码</a> </li>
+        {% if current_user.is_administer() %}
+            <li><a href="{{url_for('auth.allusers')}}">所有用户</a> </li>
+        {% endif %}
     </ul>
 </div>
 <div class="profile-top">

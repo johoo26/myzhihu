@@ -330,6 +330,9 @@ class AnonymousUser(AnonymousUserMixin):
     def is_administer(self):
         return False
 
+    def have_liked(self, answer):
+        return False
+
 login_manager.anonymous_user = AnonymousUser
 
 

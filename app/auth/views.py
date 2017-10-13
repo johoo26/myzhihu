@@ -9,6 +9,7 @@ from .forms import RegisterForm, LoginForm, ChangePasswordForm, \
     ResetPasswordRequestForm, ResetPasswordForm, ChangeEmailForm, SearchForm
 from ..models import User, Topic
 from ..emails import send_mail
+from ..decorators import admin_required
 
 #每次请求dispatch之前都要经过before函数处理
 #如果用户登录了但是未确认账号，且请求的端点不是auth/static
@@ -171,3 +172,15 @@ def change_email(token):
     else:
         flash(u'更改邮箱失败！')
     return redirect(url_for('auth.setting'))
+
+@auth.route('/all-users')
+@admin_required
+@login_required
+def allusers():
+    page = request.args.get('page', 1, type=int)
+    count = User.query.count()
+    pagination = User.query.order_by(User.username).paginate(
+        page, error_out=False)
+    users = pagination.items
+    return render_template('allusers.html', pagination=pagination,
+                           count=count, users=users)

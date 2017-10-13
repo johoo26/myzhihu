@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% import "_macros.html" as macro %}
+{% block title %}所有用户 - 知乎{% endblock %}
+
+{% block page_content %}
+<div class="profile-top">
+    <ul class="nav nav-tabs">
+        <li><a href="{{url_for('auth.setting')}}">账号和密码</a> </li>
+        {% if current_user.is_administer %}
+        <li class="active"><a href="#">所有用户</a> </li>
+        {% endif %}
+    </ul>
+</div>
+<div class="profile-top">
+    <p>共有用户：{{count}}人</p>
+    {% for user in users %}
+    <p><a href="{{url_for('main.profile', username=user.username)}}" >{{user.username}}</a>
+        <span class="email-left-distance">{{user.email}}</span>
+    </p>
+    {% endfor %}
+
+    {% if pagination %}
+    <div class="pagination">
+        {{macro.pagination_widget(pagination, 'auth.allusers')}}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

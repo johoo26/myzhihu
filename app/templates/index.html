@@ -5,25 +5,37 @@
 {% block page_content %}
 <div class="page-header">
     <ul class="nav nav-tabs">
+        <li{% if choice == 3 %} class="active" {% endif %}><a
+            href="{{url_for('main.show_all')}}">全部</a></li>
+        {% if current_user.is_authenticated %}
         <li{% if choice == 0 %} class="active" {% endif %}><a
             href="{{url_for('main.show_answers_interested_topics')}}">关注的话题动态</a></li>
         <li{% if choice == 1 %} class="active" {% endif %}><a
             href="{{url_for('main.show_answers_followings')}}">关注人的回答</a></li>
         <li{% if choice == 2 %} class="active" {% endif %}><a
             href="{{url_for('main.show_likes_followings')}}">关注人的赞</a></li>
+        {% endif %}
     </ul>
 </div>
 <div>
     {% for answer in answers %}
-        {% if choice == 0 %}
+        {% if choice == 0 or choice == 3 %}
         <p class="grey">来自话题：
-            {% for topic in answer.question.topics %}
+            {% if current_user.is_authenticated %}
+                {% for topic in answer.question.topics %}
                 {% if topic in current_user.topics %}
                 <a href="{{url_for('main.topic_dynamics', id=topic.id)}}">
                 {{topic.name}}
                 </a>
                 {% endif %}
-            {% endfor %}
+                {% endfor %}
+            {% else %}
+                {% for topic in answer.question.topics %}
+                <a href="{{url_for('main.topic_dynamics', id=topic.id)}}">
+                {{topic.name}}
+                </a>
+                {% endfor %}
+            {% endif %}
         </p>
         {% else %}
         <p class="grey">{{answer.author.username}}回答了问题 * {{moment(answer.timestamp).fromNow(refresh=True)}}</p>
@@ -46,8 +58,10 @@
             {{macro.pagination_widget(pagination, 'main.show_answers_interested_topics')}}
         {% elif choice == 1 %}
             {{macro.pagination_widget(pagination, 'main.show_answers_followings')}}
-        {% else %}
+        {% elif choice == 2 %}
             {{macro.pagination_widget(pagination, 'main.show_likes_followings')}}
+        {% elif choice == 3 %}
+            {{macro.pagination_widget(pagination, 'main.show_all')}}
         {% endif %}
     </div>
     {% endif %}
