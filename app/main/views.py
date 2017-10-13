@@ -48,7 +48,7 @@ def index():
         answers = pagination.items
         likes = []
     else:
-        pagination = Answer.query.order_by(Answer.likes_count.desc()).\
+        pagination = Answer.query.order_by(Answer.likes_count).\
             paginate(page, per_page=10, error_out=False)
         answers = pagination.items
         likes = []
