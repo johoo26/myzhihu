@@ -16,7 +16,7 @@ class Config(object):
     MAIL_PORT = 25
     MAIL_USE_TLS = True
     ZHIHU_MAIL_SUBJECT_PREFIX = u'【知乎】'
-    ZHIHU_MAIL_SENDER = 'Zhihu Admin <nju_0913@163.com>'
+    ZHIHU_MAIL_SENDER = 'Zhihu Admin <your_email@example.com>'
     ZHIHU_ADMIN = os.environ.get('ZHIHU_ADMIN')
     ZHIHU_SLOW_DB_QUERY_TIME = 0.5
     WHOOSHEE_MIN_STRING_LEN = 1
